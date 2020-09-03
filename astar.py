@@ -1,9 +1,11 @@
 import argparse
 import time
+
+import window
 import numpy as np
 import random
 
-from window.window import Window
+# from window.window import Window
 from astaral.astaral import Astaral
 
 
@@ -32,42 +34,48 @@ def block2adja(boxex):
 
 
 def main(args):
-    size = [args.n, args.n]
-    dispsize = [640 - (640 % size[0]), 640 - (640 % size[1])]
+    # size = [args.n, args.n]
+    size = [10] * 2
+    # dispsize = [640 - (640 % size[0]), 640 - (640 % size[1])]
 
-    print(f'{dispsize}')
+    # print(f'{dispsize}')
 
-    tmparr = np.ones([args.n, args.n], dtype=np.int)
+    tmparr = np.ones(size, dtype=np.int)
 
-    for i in range(50):
-        rand = random.randint(1, 12)
-        rand2 = random.randint(1, 12)
+    for _ in range(size[0]):
+        rand = random.randint(0, size[0] - 1)
+        rand2 = random.randint(0, size[0] - 1)
         tmparr[rand, rand2] = 99
 
-    astar = Astaral(args.n)
+    astar = Astaral(size[0])
 
-    window = Window('A*', dispsize)
+    # window = Window('A*', dispsize)
+    # window.start()
     running = True
-    window.start()
 
     testarr = block2adja(tmparr)
 
-    while running:
-        window.boxes = tmparr
+    current = random.randint(0, 139)
+    goal = random.randint(0, 139)
 
-        astar.shortest_path_step(window.boxes, testarr, random.randint(0, 139), random.randint(0, 139))
+    dist = astar.shortest_path(tmparr, testarr)
+    print(dist)
 
-        print(astar.list)
+    # while running:
+    # window.boxes = tmparr
 
-        running = window.events()
+    # astar.shortest_path_step(window.boxes, testarr, current, goal)
+    # astar.shortest_path_step(tmparr, testarr, current, goal)
 
-        # 60FPS
-        time.sleep(1 / 60)
+    # running = window.events()
+
+    # 60FPS
+    # time.sleep(1 / 60)
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-n', help='number of box', default=13)
-    args = parser.parse_args()
+    # parser = argparse.ArgumentParser()
+    # parser.add_argument('-n', help='number of box', default=30)
+    # args = parser.parse_args()
 
-    main(args)
+    main(None)

@@ -1,16 +1,21 @@
 import numpy as np
+from pqueue.pqueue import Heap
 
 
-def minDistance(dist, queue):
-    mini = 999
-    miniindex = 0
+def mindistance(dist, queue):
+    minimum = 999
+    minimum_index = 0
 
     for j in range(len(dist)):
-        if queue[j] == 0 and dist[j] <= mini:
-            mini = dist[j]
-            miniindex = j
+        if queue[j] == 0 and dist[j] <= minimum:
+            minimum = dist[j]
+            minimum_index = j
 
-    return miniindex
+    return minimum_index
+
+
+def create_zeros(n):
+    return np.zeros([n**2])
 
 
 class Astaral:
@@ -22,38 +27,46 @@ class Astaral:
         self.queue = None
         self.list = []
 
-    def shortest_path(self, map=None, graph=None, current=None, goal=None):
-        dist = np.zeros([self.n * self.n], dtype=np.int)
-        queue = np.zeros([self.n * self.n], dtype=np.int)
+    def shortest_path(self, map=None, graph=None):
+        dist = create_zeros(self.n)
+        queue = create_zeros(self.n)
+        heap = Heap()
 
-        for i in range(len(dist)):
+        heap.insert(0, 0)
+        dist[0] = 0
+
+        for i in range(1, len(dist) - 1):
+            heap.insert(999, i)
+
             dist[i] = 999
             queue[i] = 0
 
-        dist[0] = 0
-        print(map)
+        while not heap.isEmpty():
+            u = heap.find_min().value
+            heap.delete_min()
 
-        for i in range(len(dist) - 1):
-            u = minDistance(dist, queue)
-            queue[u] = 1
+            # if vertext is visited, we skip
+            if queue[u] == 0:
+                queue[u] = 1  # mark vertext as visited
 
-            x = int(u / self.n)
-            y = u % self.n
+                x = u // self.n
+                y = u % self.n
 
-            print(x, y)
+                map[x][y] = 1
 
-            map[x][y] = 1
+                for j in range(len(dist)):
+                    if queue[j] == 0 and graph[u][j] != 999 and dist[u] != 999 and (dist[u] + graph[u][j]) < dist[j]:
+                        dist[j] = dist[u] + graph[u][j]
 
-            for j in range(len(dist)):
-                if queue[j] == 0 and graph[u][j] != 999 and dist[u] != 999 and (dist[u] + graph[u][j]) < dist[j]:
-                    dist[j] = dist[u] + graph[u][j]
+                        heap.insert(dist[j], j)
 
-        return dist
+        return dist, queue
 
     def shortest_path_step(self, map=None, graph=None, current=None, goal=None):
         if self.count == 0:
             self.dist = np.zeros([self.n * self.n], dtype=np.int)
             self.queue = np.zeros([self.n * self.n], dtype=np.int)
+            self.list = np.full([self.n * self.n], -1)
 
             for i in range(len(self.dist)):
                 self.dist[i] = 999
@@ -63,8 +76,13 @@ class Astaral:
 
         self.count += 1
 
+        sx = goal // 13
+        sy = goal - (sx * 13)
+
+        map[sx, sy] = 3
+
         if self.count < len(self.dist):
-            self.u = minDistance(self.dist, self.queue)
+            self.u = mindistance(self.dist, self.queue)
             self.queue[self.u] = 1
 
             previous = self.dist[goal]
@@ -77,14 +95,13 @@ class Astaral:
                         self.dist[self.u] + graph[self.u][j]) < self.dist[j]:
                     self.dist[j] = self.dist[self.u] + graph[self.u][j]
 
+                    self.list[j] = self.u
+
             if map[x][y] != 99:
                 map[x][y] = 2
 
             if self.u == goal:
                 map[x][y] = 3
                 self.count = len(self.dist)
-
-            if self.queue[goal] != 1 and previous != self.dist[goal]:
-                self.list.append(self.u)
 
         return True
