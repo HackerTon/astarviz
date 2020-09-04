@@ -1,81 +1,61 @@
 import argparse
-import time
-
-import window
-import numpy as np
 import random
 
-# from window.window import Window
+import numpy as np
+
 from astaral.astaral import Astaral
+from window.window import Window
 
 
-def block2adja(boxex):
-    n = len(boxex)
+def block2adja(box):
+    ops = [(1, 0), (-1, 0), (0, 1), (0, -1)]
 
-    adja = np.full([n * n, n * n], 999)
+    height = len(box)
+    width = len(box[0])
 
-    ops = [[-1, 0], [0, 1], [0, -1], [1, 0]]
+    vertices = {i: [] for i in range(width * height)}
 
-    # Using scanning window
-    for i in range(0, n):
-        for j in range(0, n):
-            for op in ops:
-                x = op[0] + i
-                y = op[1] + j
+    for i in range(width):
+        for j in range(height):
+            vertex = (j * width) + i
 
-                if 0 <= x < n:
-                    if 0 <= y < n:
-                        org = i * n + j
-                        loc = x * n + y
+            if box[i, j] != 99:
+                for op in ops:
+                    x = i + op[0]
+                    y = j + op[1]
 
-                        adja[org, loc] = boxex[i][j]
+                    vertexb = (y * width) + x
 
-    return adja
+                    if 0 <= x < width and 0 <= y < height and box[x, y] != 99:
+                        vertices[vertex].append((vertexb, 5))
+
+    return vertices
 
 
 def main(args):
-    # size = [args.n, args.n]
-    size = [10] * 2
-    # dispsize = [640 - (640 % size[0]), 640 - (640 % size[1])]
-
-    # print(f'{dispsize}')
+    size = [args.n, args.n]
 
     tmparr = np.ones(size, dtype=np.int)
 
-    for _ in range(size[0]):
+    for _ in range(10):
         rand = random.randint(0, size[0] - 1)
         rand2 = random.randint(0, size[0] - 1)
         tmparr[rand, rand2] = 99
 
     astar = Astaral(size[0])
 
-    # window = Window('A*', dispsize)
-    # window.start()
-    running = True
-
     testarr = block2adja(tmparr)
 
-    current = random.randint(0, 139)
-    goal = random.randint(0, 139)
+    window = Window(size[0])
+    window.start()
+    window.boxes = tmparr
 
-    dist = astar.shortest_path(tmparr, testarr)
-    print(dist)
-
-    # while running:
-    # window.boxes = tmparr
-
-    # astar.shortest_path_step(window.boxes, testarr, current, goal)
-    # astar.shortest_path_step(tmparr, testarr, current, goal)
-
-    # running = window.events()
-
-    # 60FPS
-    # time.sleep(1 / 60)
+    astar.shortest_path(window, testarr)
 
 
 if __name__ == '__main__':
-    # parser = argparse.ArgumentParser()
-    # parser.add_argument('-n', help='number of box', default=30)
-    # args = parser.parse_args()
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-n', help='number of box', default=30)
+    args = parser.parse_args()
 
-    main(None)
+    main(args)

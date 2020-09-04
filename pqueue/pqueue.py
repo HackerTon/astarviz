@@ -49,17 +49,21 @@ class Heap:
             heapA.sibling = None
             heapB.sibling = None
 
+            points = []
             while True:
                 if newNode is None or newNode.sibling is None:
+                    while len(points) != 0:
+                        node = points.pop(-1)
+
+                        newNode = Heap._merge(node, newNode)
                     break
 
                 loopa = newNode
-                loopb = newNode.sibling
 
+                points.append(newNode)
+
+                newNode = newNode.sibling
                 loopa.sibling = None
-                loopb.sibling = None
-
-                newNode = Heap._merge(loopa, loopb)
 
             return Heap._merge(Heap._merge(heapA, heapB), newNode)
 
