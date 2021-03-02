@@ -74,6 +74,7 @@ class Heap:
         self.head = Heap._twopassmerge(self.head.leftchild)
 
 
+# Test code
 # heap = Heap()
 
 # heap.insert(10, 1)

@@ -3,19 +3,20 @@ from threading import Thread
 import numpy as np
 import sdl2
 import sdl2.ext
+from sdl2.ext import window
+from sdl2.ext.sprite import Renderer
 
 
 class Window:
-    def __init__(self, nbox, title='Visualizer'):
+    def __init__(self, nbox, title="Visualizer"):
         self.size = [1000, 1000]
         sdl2.ext.init()
 
         disp_hw = [(self.size[0] // nbox) * nbox] * 2
-
         self.window = sdl2.ext.Window(title, disp_hw)
-        self.renderer = sdl2.ext.Renderer(self.window)
-        self.running = True
+        self.renderer = sdl2.ext.Renderer(self.window, logical_size=self.size)
 
+        self.running = True
         self.n = nbox
         self.boxes = np.zeros([nbox, nbox])
 
@@ -38,10 +39,8 @@ class Window:
 
         for i in range(1, self.n):
             # [x1, y1, x2, y2]
-            self.renderer.draw_line(
-                [i * divx, 0, i * divx, size[0]], sdl2.ext.Color())
-            self.renderer.draw_line(
-                [0, i * divy, size[1], i * divy], sdl2.ext.Color())
+            self.renderer.draw_line([i * divx, 0, i * divx, size[0]], sdl2.ext.Color())
+            self.renderer.draw_line([0, i * divy, size[1], i * divy], sdl2.ext.Color())
 
     def draw_dot(self):
         size = self.size
@@ -50,8 +49,7 @@ class Window:
 
         for i in range(self.n + 1):
             for j in range(self.n + 1):
-                local = [(divxh // 2) + i * divxh,
-                         (divyh // 2) + j * divyh, 3, 3]
+                local = [(divxh // 2) + i * divxh, (divyh // 2) + j * divyh, 3, 3]
 
                 # [x1, y2, w, h]
                 self.renderer.fill([local], sdl2.ext.Color())
@@ -109,3 +107,6 @@ class Window:
     def start(self):
         rendert = Thread(target=self._render)
         rendert.start()
+
+    def stop(self):
+        self.running = False
