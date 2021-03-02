@@ -2,11 +2,9 @@ import numpy as np
 
 # convert block format to linkedlist
 # adjacent format graph
-def block2adja(box):
+def block2adja(box, size):
     ops = [(1, 0), (-1, 0), (0, 1), (0, -1)]
-
-    height = len(box)
-    width = len(box[0])
+    height, width = size
 
     vertices = {i: [] for i in range(width * height)}
 
@@ -29,4 +27,5 @@ def block2adja(box):
 
 class Graph:
     def __init__(self, box) -> None:
-        self.vertices = block2adja(box)
+        self.size = (len(box), len(box[0]))
+        self.vertices = block2adja(box, self.size)

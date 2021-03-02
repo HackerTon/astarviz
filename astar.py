@@ -25,9 +25,10 @@ def main(args):
     window.start()
     window.boxes = tmparr
 
-    dist, queue = astar.shortest_path(window, graph.vertices)
-    print(dist, queue)
+    dist, queue = astar.shortest_path(window, graph)
+    # print(dist, queue)
     # window.stop()
+    window.stop()
 
 
 if __name__ == "__main__":

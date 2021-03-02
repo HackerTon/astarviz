@@ -14,7 +14,7 @@ class Window:
 
         disp_hw = [(self.size[0] // nbox) * nbox] * 2
         self.window = sdl2.ext.Window(title, disp_hw)
-        self.renderer = sdl2.ext.Renderer(self.window, logical_size=self.size)
+        self.renderer = sdl2.ext.Renderer(self.window)
 
         self.running = True
         self.n = nbox

@@ -1,3 +1,6 @@
+from typing import List
+
+
 class Node:
     def __init__(self, key, value, leftchild, sibling):
         self.key = key
@@ -49,7 +52,7 @@ class Heap:
             heapA.sibling = None
             heapB.sibling = None
 
-            points = []
+            points: List = []
             while True:
                 if newNode is None or newNode.sibling is None:
                     while len(points) != 0:
@@ -71,7 +74,11 @@ class Heap:
         self.head = Heap._merge(self.head, Node(key, value, None, None))
 
     def delete_min(self):
-        self.head = Heap._twopassmerge(self.head.leftchild)
+        if not self.head is None:
+            self.head = Heap._twopassmerge(self.head.leftchild)
+            return True
+
+        return False
 
 
 # Test code
