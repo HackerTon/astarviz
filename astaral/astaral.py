@@ -24,6 +24,25 @@ def l2_distance(origin: List, target: List):
     return math.sqrt(x_ ** 2 + y_ ** 2)
 
 
+def l1_distance(origin: List, target: List):
+    x_ = origin[0] - target[0]
+    y_ = origin[1] - target[1]
+
+    return math.sqrt(abs(x_) + abs(y_))
+
+
+# slow search in array
+def find_min(prev: List, dist: List):
+    origin_min = float("+inf")
+    index = None
+    for i in range(len(prev)):
+        if prev[i] == 0 and dist[i] < origin_min:
+            dist[i] = i
+            index = i
+
+    return index
+
+
 class Astaral:
     def __init__(self, n=13):
         self.n = n
@@ -37,53 +56,56 @@ class Astaral:
     # check for every single block in the map
     def shortest_path(self, window: Window, graph: Graph):
         dist = create_zeros(self.n)
-        queue = create_zeros(self.n)
+        prev = [0] * self.n * self.n
         heap = Heap()
 
-        heap.insert(0, 0)
-        dist[0] = 0
+        initial_node = self.n * 15 + 15
+        # heap.insert(0, initial_node)
 
+        # fill the dist array with zeroes
         for i in graph.vertices.keys():
-            if i != 0:
-                dist[i] = 9999
-            queue[i] = 0
+            dist[i] = float("+inf")
+        dist[initial_node] = 0
 
         if window is None:
             running = True
         else:
             running = window.events()
 
-        while not heap.isEmpty() and running:
-            node = heap.find_min()
-            u = node.value  # is the index of graph
-            while heap.delete_min():
-                pass
+        while 0 in prev and running:
+            # node = heap.find_min()
+            # heap.delete_min()
+            u = find_min(prev, dist)
 
-            # print(node.key, node.value)
+            # u = node.value  # is the index of graph
 
-            if queue[u] == 0:  # if vertex is visited, we skip
-                queue[u] = 1  # mark vertex as visited
+            # Color the box inside of GUI engine
+            if window is not None:
+                y, x = xy_finder(u, (self.n, self.n))
+                window.boxes[x][y] = 3
 
-                # Color the box inside of GUI engine
-                if window is not None:
-                    y, x = xy_finder(u, (self.n, self.n))
-                    window.boxes[x][y] = 3
+            # visit all adjacent vertices from u
+            for vertex in graph.vertices[u]:
+                # z is node index
+                z = vertex[0]
+                weight = vertex[1]
 
-                for vertex in graph.vertices[u]:  # visit all adjacent vertices from u
-                    z = vertex[0]  # z is node index
-                    weight = vertex[1]
+                l2 = l1_distance(
+                    xy_finder(z, (self.n, self.n)),
+                    [29, 29],
+                )
 
-                    l2 = l2_distance(
-                        xy_finder(z, (self.n, self.n)),
-                        [29, 29],
-                    )
+                alt_distance = dist[u] + weight
 
-                    if dist[u] + weight + l2 < dist[z]:
-                        dist[z] = dist[u] + weight + l2
-                        # print(f"weight {dist[z]} at {z}")
-                        heap.insert(dist[z], z)
+                if alt_distance < dist[z]:
+                    dist[z] = alt_distance + l2
+                    # heap.insert(dist[z], z)
+
+                # u index is marked
+                # u is no longer visited
+                prev[u] = 1
 
             time.sleep(0.1)
             running = window.events()
 
-        return dist, queue
+        return dist, prev
