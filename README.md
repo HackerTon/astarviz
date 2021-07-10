@@ -9,8 +9,8 @@ Graph is stored in hybrid dictionary list format.
 
 😊 Please contribute if you have any
 
-- [] priority heap or pairing heap with decrease-key operation
-- [] uses pyglet with shader
+- [ ] priority heap or pairing heap with decrease-key operation
+- [ ] uses pyglet with shader
 
 ## Example
 
