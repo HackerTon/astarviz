@@ -5,6 +5,13 @@
 Actually, this is a implementation of A\* algorithm. Optimize with pairing heap for time efficient find min distance.
 Graph is stored in hybrid dictionary list format.
 
+## Feature to be added
+
+😊 Please contribute if you have any
+
+- [] priority heap or pairing heap with decrease-key operation
+- [] uses pyglet with shader
+
 ## Example
 
 ### **Dijkstra visualisation**
@@ -13,7 +20,7 @@ Graph is stored in hybrid dictionary list format.
 
 ### **A\* visualisation**
 
-![A* Algorithm](./img/a*.png)
+![A* Algorithm](./img/astar_2.png)
 
 ## Precaution
 

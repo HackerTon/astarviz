@@ -54,13 +54,13 @@ class Astaral:
 
     # total swiping of all blocks
     # check for every single block in the map
-    def shortest_path(self, window: Window, graph: Graph):
+    def shortest_path(
+        self, window: Window, graph: Graph, initial_node: int, final_node: int
+    ):
         dist = create_zeros(self.n)
         prev = [0] * self.n * self.n
-        heap = Heap()
 
-        initial_node = self.n * 15 + 15
-        # heap.insert(0, initial_node)
+        initial_node = initial_node
 
         # fill the dist array with zeroes
         for i in graph.vertices.keys():
@@ -73,11 +73,11 @@ class Astaral:
             running = window.events()
 
         while 0 in prev and running:
-            # node = heap.find_min()
-            # heap.delete_min()
             u = find_min(prev, dist)
 
-            # u = node.value  # is the index of graph
+            # exit if final node is found
+            if u == final_node:
+                break
 
             # Color the box inside of GUI engine
             if window is not None:
@@ -90,22 +90,21 @@ class Astaral:
                 z = vertex[0]
                 weight = vertex[1]
 
-                l2 = l1_distance(
+                l2 = l2_distance(
                     xy_finder(z, (self.n, self.n)),
-                    [29, 29],
+                    xy_finder(final_node, (self.n, self.n)),
                 )
 
                 alt_distance = dist[u] + weight
 
                 if alt_distance < dist[z]:
                     dist[z] = alt_distance + l2
-                    # heap.insert(dist[z], z)
 
                 # u index is marked
                 # u is no longer visited
                 prev[u] = 1
 
-            time.sleep(0.1)
+            time.sleep(0.05)
             running = window.events()
 
         return dist, prev

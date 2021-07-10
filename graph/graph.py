@@ -12,20 +12,22 @@ def block2adja(box, size):
         for j in range(height):
             vertex = (j * width) + i
 
-            if box[i, j] != 99:
+            if box[i, j] != 10:
                 for op in ops:
                     x = i + op[0]
                     y = j + op[1]
 
                     vertexb = (y * width) + x
 
-                    if 0 <= x < width and 0 <= y < height and box[x, y] != 99:
-                        vertices[vertex].append((vertexb, 5))
-
+                    if 0 <= x < width and 0 <= y < height and box[x, y] != 10:
+                        vertices[vertex].append((vertexb, 1))
     return vertices
 
 
 class Graph:
+    BLOCK = 10
+    NON_BLOCK = 1
+
     def __init__(self, box) -> None:
         self.size = (len(box), len(box[0]))
         self.vertices = block2adja(box, self.size)

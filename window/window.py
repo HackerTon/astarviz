@@ -2,9 +2,11 @@ from threading import Thread
 
 import numpy as np
 import sdl2
+from sdl2 import mouse
 import sdl2.ext
 from sdl2.ext import window
 from sdl2.ext.sprite import Renderer
+import ctypes
 
 
 class Window:
@@ -19,6 +21,9 @@ class Window:
         self.running = True
         self.n = nbox
         self.boxes = np.zeros([nbox, nbox])
+
+        self.x = ctypes.c_int(0)
+        self.y = ctypes.c_int(0)
 
         self._show()
 
@@ -91,6 +96,7 @@ class Window:
 
     def events(self):
         key_state = sdl2.SDL_GetKeyboardState(None)
+        mouse_state = sdl2.SDL_GetMouseState(ctypes.byref(self.x), ctypes.byref(self.y))
 
         events = sdl2.ext.get_events()
         for event in events:
@@ -103,6 +109,16 @@ class Window:
             #     elif key_state[sdl2.SDL_SCANCODE_DOWN]:
             #         self._updatedelay(self.delay - 10)
         return True
+
+    def getMousePos(self):
+        events = sdl2.ext.get_events()
+
+        while True:
+            for event in events:
+                if event.type == sdl2.SDL_MOUSEBUTTONDOWN:
+                    break
+
+        return self.x.value, self.y.value
 
     def start(self):
         rendert = Thread(target=self._render)

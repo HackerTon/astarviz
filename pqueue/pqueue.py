@@ -79,18 +79,3 @@ class Heap:
             return True
 
         return False
-
-
-# Test code
-# heap = Heap()
-
-# heap.insert(10, 1)
-# heap.insert(11, 10)
-# heap.insert(5, 20)
-# heap.insert(9, 50)
-# heap.insert(8, 10)
-# heap.insert(7, 50)
-
-# print(heap.find_min())
-# heap.delete_min()
-# print(heap.find_min().key)

@@ -1,5 +1,6 @@
 import argparse
 import random
+from time import sleep
 
 import numpy as np
 
@@ -16,9 +17,10 @@ def main(args):
     for _ in range(int(args.b)):
         rand = random.randint(0, size[0] - 1)
         rand2 = random.randint(0, size[0] - 1)
-        tmparr[rand, rand2] = 1
+        tmparr[rand, rand2] = Graph.BLOCK
 
-    tmparr[size[0] - 1, size[1] - 1] = 1  # make sure the last block is always free
+    # make sure the last block is always free
+    tmparr[size[0] - 1, size[1] - 1] = Graph.NON_BLOCK
 
     astar = Astaral(size[0])
     graph = Graph(tmparr)
@@ -27,9 +29,12 @@ def main(args):
     window.start()
     window.boxes = tmparr
 
-    dist, prev = astar.shortest_path(window, graph)
+    dist, prev = astar.shortest_path(window, graph, 0, size[0] * size[1] - 1)
 
     print("Program Ended!")
+    print("Type 'e' to delete")
+    while input() != "e":
+        sleep(1)
     window.stop()
 
 
