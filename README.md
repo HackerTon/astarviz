@@ -9,7 +9,7 @@ Graph is stored in hybrid dictionary list format.
 
 😊 Please contribute if you have any
 
-- [ ] priority heap or pairing heap with decrease-key operation
+- [ X ] priority heap or pairing heap with decrease-key operation
 - [ ] uses pyglet with shader
 
 ## Example
