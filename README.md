@@ -20,7 +20,7 @@ Graph is stored in hybrid dictionary list format.
 
 ### **A\* visualisation**
 
-![A* Algorithm](./img/astar_2.png)
+![A* Algorithm](./img/astar.png)
 
 ## Precaution
 

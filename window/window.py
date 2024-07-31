@@ -2,10 +2,7 @@ from threading import Thread
 
 import numpy as np
 import sdl2
-from sdl2 import mouse
 import sdl2.ext
-from sdl2.ext import window
-from sdl2.ext.sprite import Renderer
 import ctypes
 
 
@@ -18,6 +15,7 @@ class Window:
         self.window = sdl2.ext.Window(title, disp_hw)
         self.renderer = sdl2.ext.Renderer(self.window)
 
+        self.delay = 0.01
         self.running = True
         self.n = nbox
         self.boxes = np.zeros([nbox, nbox])

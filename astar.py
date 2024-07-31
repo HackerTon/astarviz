@@ -11,7 +11,7 @@ from window import Window
 
 def main(args):
     size = [int(args.n), int(args.n)]
-    tmparr = np.ones(size, dtype=np.int)
+    tmparr = np.ones(size, dtype=int)
 
     # set random spot as blockage
     for _ in range(int(args.b)):
@@ -29,7 +29,9 @@ def main(args):
     window.start()
     window.boxes = tmparr
 
-    dist, prev = astar.shortest_path(window, graph, 0, size[0] * size[1] - 1)
+    score, score_with_h, open_nodes = astar.shortest_path(
+        window, graph, 0, size[0] * size[1] - 1
+    )
 
     print("Program Ended!")
     print("Type 'e' to delete")
